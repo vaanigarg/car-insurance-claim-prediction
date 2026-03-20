@@ -17,3 +17,4 @@ Random Forest / XGBoost (based on results)
 
 ## Deployment
 Model saved using joblib and can be used in a Streamlit web app.
+The model is deployed using Streamlit for real-time production.
