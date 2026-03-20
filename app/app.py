@@ -2,7 +2,7 @@ import streamlit as st
 import joblib
 import pandas as pd
 
-model = joblib.load("models/final_model.pkl")
+model = joblib.load("models/xgb_model_v2.pkl")
 
 st.title("Car Insurance Claim Prediction")
 
