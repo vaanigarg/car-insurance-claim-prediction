@@ -13,11 +13,13 @@ uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
 if uploaded_file is not None:
     input_df = pd.read_csv(uploaded_file)
-    input_df = input_df.reindex(columns=columns, fill_value=0)
+
     st.write("### Uploaded Data Preview")
     st.dataframe(input_df.head())
 
     try:
+        input_df = input_df.reindex(columns=columns, fill_value=0)
+
         predictions = model.predict(input_df)
 
         input_df["Prediction"] = predictions
