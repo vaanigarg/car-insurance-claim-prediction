@@ -32,4 +32,4 @@ if uploaded_file is not None:
 
         df["Prediction"] = preds
 
-        st.write("Predicions", df)
+        st.write("Predictions", df)
