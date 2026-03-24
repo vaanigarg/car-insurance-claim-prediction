@@ -1,44 +1,35 @@
 import streamlit as st
-import joblib
-import os
 import pandas as pd
-
-st.set_page_config(page_title="Car Insurance Prediction", layout="wide")
+from xgboost import XGBClassifier
 
 st.title("Car Insurance Claim Prediction")
 
-@st.cache_resource
-def load_model():
-    model_path = os.path.join("models", "xgb_model.pkl")
-    model = joblib.load(model_path)
-    return model
-
-@st.cache_resource
-def load_columns():
-    col_path = os.path.join("models", "columns.pkl")
-    return joblib.load(col_path)
-
-model = load_model()
-columns = load_columns()
-
-uploaded_file = st.file_uploader("Upload CSV file for prediction", type=["csv"])
+uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
 if uploaded_file is not None:
-    input_df = pd.read_csv(uploaded_file)
 
-    st.subheader("Uploaded Data")
-    st.dataframe(input_df.head())
+    df = pd.read_csv(uploaded_file)
+    st.write("Uploaded Data", df.head())
 
-    try:
+    df = df.select_dtypes(include=['int64', 'float64'])
 
-        input_df = input_df.reindex(columns=columns, fill_value=0)
+    if "is_claim" not in df.columns:
+        st.error("CSV must contain 'is_claim' column")
+    else:
+        X = df.drop("is_claim", axis=1)
+        y = df["is_claim"]
 
-        predictions = model.predict(input_df)
+        model = XGBClassifier(
+            n_estimators=50,
+            max_depth=3,
+            learning_rate=0.1,
+            eval_metric='logloss'
+        )
+    
+        model.fit(X,y)
 
-        input_df["Prediction"] = predictions
+        preds = model.predict(X)
 
-        st.subheader("Prediction Results")
-        st.dataframe(input_df)
+        df["Prediction"] = preds
 
-    except Exception as e:
-        st.error(f"Error during prediction: {e}")
+        st.write("Predicions", df)
