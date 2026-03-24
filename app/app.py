@@ -9,7 +9,7 @@ st.title("Car Insurance Claim Prediction")
 
 @st.cache_resource
 def load_model():
-    model_path = os.path.join("models", "xgb_model_v2.pkl")
+    model_path = os.path.join("models", "xgb_model.pkl")
     model = joblib.load(model_path)
     return model
 
